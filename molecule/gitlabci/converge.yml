@@ -1,0 +1,28 @@
+---
+- name: "Converge"
+  hosts: "all"
+  tasks:
+    # replace these tasks with whatever you find suitable to test
+    - name: "Copy something to test use of synchronize module"
+      ansible.builtin.copy:
+        src: "/etc/hosts"
+        dest: "/tmp/hosts-from-controller"
+        mode: 0700
+
+    - name: "Include labocbz.add_apache_confs"
+      tags:
+        - "labocbz.add_apache_confs"
+      vars:
+        apache_ldap_url: "{{ inv_apache_ldap_url }}"
+        apache_ldap_port: "{{ inv_apache_ldap_port }}"
+        apache_ldap_dc: "{{ inv_apache_ldap_dc }}"
+        apache_auth_ldap_url: "{{ inv_apache_auth_ldap_url }}"
+        apache_custom_ldap_base_header: "{{ inv_apache_custom_ldap_base_header }}"
+        apache_webmaster: "{{ inv_apache_webmaster }}"
+        apache_http_listen_port: "{{ inv_apache_http_listen_port }}"
+        apache_https_listen_port: "{{ inv_apache_https_listen_port }}"
+        apache_ssl_files_path: "{{ inv_apache_ssl_files_path }}"
+        apache_configurations: "{{ inv_apache_configurations }}"
+        apache_base_document_root: "{{ inv_apache_base_document_root }}"
+      ansible.builtin.include_role:
+        name: "labocbz.add_apache_confs"

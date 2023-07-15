@@ -1,0 +1,54 @@
+---
+- name: "Add / replace Apache2 confs"
+  notify: "Reload Apache2"
+  block:
+  - name: "Create apache confs files: HTTP"
+    loop_control:
+      loop_var: apache_conf
+    loop: "{{ apache_configurations }}"
+    ansible.builtin.template:
+      src: "templates/vhost-HTTP.conf.j2"
+      dest: "{{ apache_conf_path }}/{{ apache_conf.server_name }}-HTTP.conf"
+      lstrip_blocks: yes
+      force: yes
+      owner: "root"
+      group: "root"
+      mode: 0700
+
+  - name: "Create apache confs files: HTTPS"
+    when: apache_conf.ssl
+    loop: "{{ apache_configurations }}"
+    loop_control:
+      loop_var: apache_conf
+    ansible.builtin.template:
+      src: "templates/vhost-HTTPS.conf.j2"
+      dest: "{{ apache_conf_path }}/{{ apache_conf.server_name }}-HTTPS.conf"
+      lstrip_blocks: yes
+      force: yes
+      owner: "root"
+      group: "root"
+      mode: 0700
+
+  - name: "Create DocumentsRoot directory"
+    loop: "{{ apache_configurations }}"
+    register: output
+    changed_when: output.size <= 0
+    loop_control:
+      loop_var: apache_conf
+    ansible.builtin.file:
+      path: "{{ apache_base_document_root }}/{{ apache_conf.server_name }}"
+      state: directory
+      recurse: yes
+      owner: "root"
+      group: "root"
+      mode: 0700
+
+  - name: "Enable Apache2 configurations"
+    loop: "{{ apache_configurations }}"
+    loop_control:
+      loop_var: apache_conf
+    register: output
+    changed_when: output.rc != 0
+    ansible.builtin.command: a2ensite {{ apache_conf.server_name }}-HTTP*.conf
+    args:
+      chdir: "/etc/apache2/sites-available/"

@@ -1,0 +1,48 @@
+---
+apache_ldap_url: "ldap.your.domain"
+apache_ldap_port: 389
+apache_ldap_dc: "DC=sub,DC=domain,DC=net"
+apache_auth_ldap_url: "ldap://{{ apache_ldap_url }}:{{ apache_ldap_port }}/OU=People,{{ apache_ldap_dc }}?uid"
+apache_custom_ldap_base_header: "ldap-auth"
+
+apache_webmaster: "your.webmaster@domain.tld"
+
+apache_http_listen_port: 80
+apache_https_listen_port: 443
+
+apache_mod_security_available: true
+apache_mod_deflate_available: true
+apache_mod_pagespeed_available: true
+
+apache_ssl_files_path: "/etc/letsencrypt/live"
+apache_conf_path: "/etc/apache2/sites-available"
+apache_base_document_root: "/var/www/html"
+
+apache_limit_request_body: 1024000000
+
+apache_configurations:
+  - server_name: "my.https.website.net"
+    server_aliases:
+      - oneAlias.net
+      - anotherAlias.com
+    is_black_hole: true
+    ssl: true
+    key_file: "{{ apache_ssl_files_path }}/my.https.website.net/my.https.website.net.key"
+    crt_file: "{{ apache_ssl_files_path }}/my.https.website.net/my.https.website.net.crt"
+    proxy_pass_url: "https://my.proxy"
+    proxy_pass_port: 8080
+    sec_rule_engine_detection_only: true
+    sec_rules_remove_by_id:
+      - 980130
+      - 933120
+    rewrite_rules:
+      - ^/\.well-known/carddav /remote.php/dav [R=301,L]
+      - ^/\.well-known/caldav /remote.php/dav [R=301,L]
+      - ^/\.well-known/webfinger /index.php/.well-known/webfinger [R=301,L]
+      - ^/\.well-known/nodeinfo /index.php/.well-known/nodeinfo [R=301,L]
+    redirect_host: "http://my.newest.site.net"
+    ldap_groups:
+      - admin
+      - users
+    ldap_exception_base_urls:
+      - /api

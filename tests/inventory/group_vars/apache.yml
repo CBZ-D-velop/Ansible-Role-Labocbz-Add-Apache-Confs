@@ -1,0 +1,25 @@
+---
+inv_apache_https_listen_port: 443
+inv_apache_http_listen_port: 80
+
+inv_apache_modules:
+  - "ssl"
+  - "rewrite"
+  - "proxy"
+  - "proxy_http"
+  - "ldap"
+  - "authnz_ldap"
+  - "filter"
+  - "deflate"
+  - "headers"
+  - "proxy_wstunnel"
+
+inv_apache_enable_qos: true
+inv_apache_qos_client_entries: "100000"
+inv_apache_qos_srv_max_conn_per_ip: "50"
+inv_apache_qos_max_clients: "256"
+inv_apache_qos_srv_max_conn_close: "180"
+inv_apache_qos_srv_min_data_rate: "150 1200"
+
+inv_apache_enable_security: false
+inv_apache_enable_default_vhosts: true
