@@ -24,6 +24,26 @@
 
 An Ansible role create and add Apache2 HTTP/HTTPS confs to your server.
 
+This role is designed to create Apache2 configurations tailored for various web applications. It offers a wide range of configuration options, allowing administrators to customize Apache2 settings based on their specific needs.
+
+The role supports LDAP authentication, enabling administrators to integrate Apache2 with an LDAP server for user authentication. By specifying the LDAP URL, port, and domain components, administrators can easily set up LDAP-based authentication for their web applications.
+
+It also provides options to set up virtual hosts for different server names and aliases, making it convenient to host multiple web applications on the same Apache2 server.
+
+Administrators can define black-hole hosts, which will not be served by Apache2, effectively blocking access to specific domains.
+
+SSL support is available, allowing administrators to configure HTTPS for their web applications. They can specify the SSL key and certificate files to enable secure connections.
+
+Proxy pass functionality is also supported, enabling administrators to redirect requests to a backend server or another URL using the Apache2 proxy module.
+
+The role offers fine-grained control over the ModSecurity module, allowing administrators to enable or disable specific rules based on their security requirements.
+
+Furthermore, administrators can define rewrite rules to modify URLs and redirect specific requests to different locations.
+
+The role also allows for URL-based exceptions from LDAP authentication, useful for scenarios where certain routes should not require authentication.
+
+For administrators looking to manage multiple Apache2 configurations easily, this role is a valuable addition to the basic Apache2 installation. Its flexibility and extensive feature set make it a powerful tool for creating custom Apache2 setups to cater to various web application requirements.
+
 ## Folder structure
 
 By default Ansible will look in each directory within a role for a main.yml file for relevant content (also man.yml and main):

@@ -4,7 +4,7 @@
 #                            #
 ##############################
 
-{% if apache_conf.is_black_hole is defined %}
+{% if apache_conf.is_black_hole | default(false) %}
 
 {% if apache_conf.is_black_hole %}
 <VirtualHost _default_:{{ apache_http_listen_port }}>
@@ -19,7 +19,7 @@
         DocumentRoot {{ apache_base_document_root }}/{{ apache_conf.server_name }}
         ServerSignature Off
         LimitRequestBody {{ apache_limit_request_body }}
-        {% if apache_conf.is_black_hole is defined %}
+        {% if apache_conf.is_black_hole | default(false) %}
         {% if apache_conf.is_black_hole %}
         ServerName default
         ServerAlias 127.0.0.1
@@ -31,7 +31,7 @@
         ServerName {{ apache_conf.server_name }}
         {% endif %}
         ServerAlias {{ apache_conf.server_name }}
-        {% if apache_conf.server_aliases is defined %}
+        {% if apache_conf.server_aliases | default(false) %}
         {% for server_alias in apache_conf.server_aliases %}
         ServerAlias {{ server_alias }}
         {% endfor %}
@@ -104,7 +104,7 @@
 
         {% if apache_mod_security_available %}
         <IfModule mod_security2.c>
-                {% if apache_conf.secRuleEngineDetectionOnly is defined %}
+                {% if apache_conf.secRuleEngineDetectionOnly | default(false) %}
                 {% if apache_conf.secRuleEngineDetectionOnly %}
                 SecRuleEngine DetectionOnly
                 SecRequestBodyLimit {{ apache_limit_request_body }}
@@ -112,7 +112,7 @@
                 SecRequestBodyAccess Off
                 {% endif %}
                 {% endif %}
-                {% if apache_conf.sec_rules_remove_by_id is defined %}
+                {% if apache_conf.sec_rules_remove_by_id | default(false) %}
                 {% for sec_rule_remove_by_id in apache_conf.sec_rules_remove_by_id %}
                 SecRuleRemoveById {{ sec_rule_remove_by_id }}
                 {% endfor %}
@@ -120,7 +120,7 @@
         </IfModule>
         {% endif %}
 
-        {% if apache_conf.rewrite_rules is defined %}
+        {% if apache_conf.rewrite_rules | default(false) %}
         <IfModule mod_rewrite.c>
                 RewriteEngine on
                 {% for rewrite_rule in apache_conf.rewrite_rules %}
@@ -129,12 +129,12 @@
         </IfModule>
         {% endif %}
 
-        {% if apache_conf.redirect_host is defined %}
+        {% if apache_conf.redirect_host | default(false) %}
         Redirect permanent / {{ apache_conf.redirect_host }}/
         RedirectMatch permanent ^/(.*)$ {{ apache_conf.redirect_host }}/$1
         {% endif %}
-        {% if apache_conf.ldap_groups is defined %}
-        {% if apache_conf.ldap_exception_base_urls is defined %}
+        {% if apache_conf.ldap_groups | default(false) %}
+        {% if apache_conf.ldap_exception_base_urls | default(false) %}
         {% for ldap_exception_base_url in apache_conf.ldap_exception_base_urls %}
         <LocationMatch "^{{ ldap_exception_base_url }}/(.*)$">
                 Satisfy Any
@@ -163,7 +163,7 @@
         </Location>
         {% endif %}
 
-        {% if apache_conf.proxyPass is defined %}
+        {% if apache_conf.proxyPass | default(false) %}
         {% if 'https://' in apache_conf.proxyPass %}
         SSLProxyEngine on
         SSLProxyVerify none

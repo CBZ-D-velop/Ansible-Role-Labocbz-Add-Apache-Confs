@@ -3,6 +3,7 @@
   notify: "Reload Apache2"
   block:
   - name: "Create apache confs files: HTTP"
+    when: not (apache_conf.ssl | default(false))
     loop_control:
       loop_var: apache_conf
     loop: "{{ apache_configurations }}"
@@ -13,10 +14,10 @@
       force: yes
       owner: "root"
       group: "root"
-      mode: 0700
+      mode: "0700"
 
   - name: "Create apache confs files: HTTPS"
-    when: apache_conf.ssl
+    when: apache_conf.ssl | default(false)
     loop: "{{ apache_configurations }}"
     loop_control:
       loop_var: apache_conf
@@ -27,7 +28,7 @@
       force: yes
       owner: "root"
       group: "root"
-      mode: 0700
+      mode: "0700"
 
   - name: "Create DocumentsRoot directory"
     loop: "{{ apache_configurations }}"
@@ -41,7 +42,7 @@
       recurse: yes
       owner: "root"
       group: "root"
-      mode: 0700
+      mode: "0700"
 
   - name: "Enable Apache2 configurations"
     loop: "{{ apache_configurations }}"
