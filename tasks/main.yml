@@ -3,7 +3,6 @@
   notify: "Reload Apache2"
   block:
   - name: "Create apache confs files: HTTP"
-    when: not (apache_conf.ssl | default(false))
     loop_control:
       loop_var: apache_conf
     loop: "{{ apache_configurations }}"
