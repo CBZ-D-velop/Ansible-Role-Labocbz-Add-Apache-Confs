@@ -1,0 +1,19 @@
+    # Handler Certbot / Letsencrypt validations for SSL
+    <LocationMatch "^/.well-known/acme-challenge/">
+            ProxyPass !
+            ProxyPassReverse !
+            Allow from all
+    </LocationMatch>
+
+    # Enable access to file, but disable indexing
+    <Directory {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}>
+            Options -Indexes +FollowSymlinks
+            AllowOverride All
+            Require all granted
+    </Directory>
+
+    # Deny any direct access to .htaccess
+    <Files .htaccess>
+            Order allow,deny
+            Deny from all
+    </Files>

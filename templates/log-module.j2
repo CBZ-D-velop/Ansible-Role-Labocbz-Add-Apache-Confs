@@ -1,0 +1,15 @@
+    # Log ERROR and ACCES handling
+    LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+    ErrorLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/error.log"
+    CustomLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/access.log" combined
+
+    <IfModule mod_evasive20.c>
+            DOSLogDir {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/mod_evasive.log
+    </IfModule>
+    <IfModule security2_module>
+            SecAuditLog {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/modsec_audit.log
+    </IfModule>
+    <IfModule pagespeed_module>
+            # Set the PageSpeed file cache directory
+            ModPagespeedFileCachePath {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/mod_pagespeed/
+    </IfModule>

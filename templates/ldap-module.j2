@@ -1,0 +1,26 @@
+    {% if vhost.ldap.exception_base_urls | default(false) %}
+    # Add some Auth execption, because basic auth is use in multiple
+    # other soft and multiple auth token is not possible ...
+    {% for ldap_exception_base_url in vhost.ldap.exception_base_urls %}
+    <LocationMatch "^{{ ldap_exception_base_url }}/(.*)$">
+        Satisfy Any
+        Allow from all
+    </LocationMatch>
+    {% endfor %}
+    {% endif %}
+
+    # Configure LDAP Auth Basic based
+    <Location />
+        # Configure LDAP authentication
+        AuthType Basic
+        AuthName "LDAP Authentication"
+        AuthBasicProvider ldap
+        AuthLDAPURL {{ vhost.ldap.url | default(add_apache_confs_auth_ldap_url) }}
+        AuthLDAPGroupAttribute {{ vhost.ldap.attribute | default("memberUid") }}
+        AuthLDAPGroupAttributeIsDN {{ vhost.ldap.attribute_is_dn | default("off") }}
+
+        # Define groups allowed to access
+        {% for ldap_group in vhost.ldap.groups %}
+        Require ldap-group CN={{ ldap_group }},OU=group,{{ vhost.ldap.dc | default( add_apache_confs_ldap_dc) }}
+        {% endfor %}
+    </Location>

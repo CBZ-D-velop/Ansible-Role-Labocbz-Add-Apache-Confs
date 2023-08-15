@@ -1,8 +1,8 @@
 ---
-inv_apache_https_listen_port: 443
-inv_apache_http_listen_port: 80
+inv_install_apache_https_listen_port: 443
+inv_install_apache_http_listen_port: 80
 
-inv_apache_modules:
+inv_install_apache_modules:
   - "ssl"
   - "rewrite"
   - "proxy"
@@ -14,12 +14,14 @@ inv_apache_modules:
   - "headers"
   - "proxy_wstunnel"
 
-inv_apache_enable_qos: true
-inv_apache_qos_client_entries: "100000"
-inv_apache_qos_srv_max_conn_per_ip: "50"
-inv_apache_qos_max_clients: "256"
-inv_apache_qos_srv_max_conn_close: "180"
-inv_apache_qos_srv_min_data_rate: "150 1200"
+inv_install_apache_loglevel: "info"
+inv_install_apache_remove_all_vhosts: true
 
-inv_apache_enable_security: false
-inv_apache_enable_default_vhosts: true
+inv_install_apache_enable_qos: true
+inv_install_apache_enable_security: true
+inv_install_apache_enable_evasive: true
+inv_install_apache_enable_pagespeed: true
+inv_install_apache_enable_prefork: true
+
+inv_install_apache_security_core_version: "3.3.0"
+inv_install_apache_security_version: "3.0.10"

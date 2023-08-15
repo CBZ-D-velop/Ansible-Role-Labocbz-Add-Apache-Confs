@@ -1,0 +1,8 @@
+
+    {% for conf in vhost.custom_confs %}
+    #
+    # CUSTOM CONF FROM {{ conf.name }}
+    #
+    {% include './templates/cutoms/' + conf.name %}
+
+    {% endfor %}
