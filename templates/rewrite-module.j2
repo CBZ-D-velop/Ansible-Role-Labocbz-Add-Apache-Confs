@@ -1,0 +1,7 @@
+    # Add some rewrite rules
+    <IfModule mod_rewrite.c>
+        RewriteEngine on
+        {% for rule in vhost.rewrites %}
+        RewriteRule {{ rule }}
+        {% endfor %}
+    </IfModule>

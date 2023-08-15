@@ -1,0 +1,3 @@
+    # Redirect all request to the redirect target
+    Redirect permanent / {{ vhost.redirect }}/
+    RedirectMatch permanent ^/(.*)$ {{ vhost.redirect }}/$1

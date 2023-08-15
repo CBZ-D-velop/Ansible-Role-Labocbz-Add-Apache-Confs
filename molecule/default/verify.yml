@@ -18,8 +18,6 @@
           loop:
             - "/etc/apache2/apache2.conf"
             - "/etc/apache2/ports.conf"
-            - "{{ inv_apache_conf_path }}/000-default.conf"
-            - "{{ inv_apache_conf_path }}/000-default-SSL.conf"
           loop_control:
             loop_var: folder_path
           register: folder_check
@@ -28,63 +26,62 @@
             path: "{{ folder_path }}"
 
         - name: "Check Apache2 HTTP and conf"
-          loop: "{{ inv_apache_configurations }}"
+          loop: "{{ inv_add_apache_confs_configurations }}"
           loop_control:
-            loop_var: apache_conf
+            loop_var: vhost
           register: folder_check
           failed_when: not folder_check.stat.exists
           ansible.builtin.stat:
-            path: "{{ inv_apache_conf_path }}/{{ apache_conf.server_name }}-HTTP.conf"
+            path: "{{ inv_add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTP.conf"
 
         - name: "Check Apache2 HTTPS and conf"
-          loop: "{{ inv_apache_configurations }}"
+          loop: "{{ inv_add_apache_confs_configurations }}"
           loop_control:
-            loop_var: apache_conf
+            loop_var: vhost
           register: folder_check
-          when: apache_conf.ssl
+          when: vhost.ssl
           failed_when: not folder_check.stat.exists
           ansible.builtin.stat:
-            path: "{{ inv_apache_conf_path }}/{{ apache_conf.server_name }}-HTTPS.conf"
+            path: "{{ inv_add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTPS.conf"
 
         - name: "Check HTTPS conf: certs"
-          loop: "{{ inv_apache_configurations }}"
+          loop: "{{ inv_add_apache_confs_configurations }}"
           loop_control:
-            loop_var: apache_conf
+            loop_var: vhost
           register: folder_check
-          when: apache_conf.ssl
+          when: vhost.ssl.enabled | default(false)
           failed_when: not folder_check.stat.exists
           ansible.builtin.stat:
-            path: "{{ apache_conf.crt_file }}"
+            path: "{{ vhost.ssl.crt }}"
 
         - name: "Check HTTPS conf: keys"
-          loop: "{{ inv_apache_configurations }}"
+          loop: "{{ inv_add_apache_confs_configurations }}"
           loop_control:
-            loop_var: apache_conf
+            loop_var: vhost
           register: folder_check
-          when: apache_conf.ssl
+          when: vhost.ssl.enabled | default(false)
           failed_when: not folder_check.stat.exists
           ansible.builtin.stat:
-            path: "{{ apache_conf.key_file }}"
+            path: "{{ vhost.ssl.key }}"
 
     - name: "Check Apache2 webserver"
       block:
         - name: "Check Apache2 connectivity"
           ansible.builtin.wait_for:
             host: "{{ inventory_hostname }}"
-            port: "{{ inv_apache_http_listen_port }}"
+            port: "{{ inv_add_apache_confs_http_listen_port }}"
             timeout: 120
 
         - name: "Check default vhost on HTTP"
           register: result
           failed_when: not (result.status != 200 or result.status == -1)
           ansible.builtin.uri:
-            url: "http://{{ inventory_hostname }}:{{ inv_apache_http_listen_port }}/"
+            url: "http://{{ inventory_hostname }}:{{ inv_add_apache_confs_http_listen_port }}/"
             method: "GET"
 
         - name: "Check default vhost on HTTPS"
-          when: inv_apache_enable_default_vhosts
           register: result
           failed_when: not (result.status != 200 or result.status == -1)
           ansible.builtin.uri:
-            url: "https://{{ inventory_hostname }}:{{ inv_apache_https_listen_port }}/"
+            url: "https://{{ inventory_hostname }}:{{ inv_add_apache_confs_https_listen_port }}/"
             method: "GET"

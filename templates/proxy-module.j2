@@ -1,0 +1,44 @@
+    {% if 'https://' in vhost.proxy.url %}
+    # Define SSL proxy target settings
+    SSLProxyEngine on
+    SSLProxyVerify none
+    SSLProxyCheckPeerCN off
+    SSLProxyCheckPeerName off
+    SSLProxyCheckPeerExpire off
+    {% endif %}
+
+    {% if vhost.proxy.ssl | default(false) %}
+    # Define vhost SSL setting for SSL proxying
+    RequestHeader set X-Forwarded-Proto https
+    RequestHeader set X-Forwarded-Ssl on
+    RequestHeader set X-Url-Scheme https
+    RequestHeader set X-Forwarded-Proto: https
+    # Non-standard header used by Microsoft applications and load-balancers:
+    RequestHeader set Front-End-Https: on
+    {% else %}
+    # Define vhost plain text setting for SSL proxying
+    RequestHeader set X-Forwarded-Proto http
+    RequestHeader set X-Forwarded-Ssl off
+    RequestHeader set X-Url-Scheme http
+    RequestHeader set X-Forwarded-Proto: http
+    # Non-standard header used by Microsoft applications and load-balancers:
+    RequestHeader set Front-End-Https: off
+    {% endif %}
+
+    # Add some rules for sockets
+    RewriteEngine On
+    RewriteCond %{REQUEST_URI}  ^/socket.io [NC]
+    RewriteCond %{QUERY_STRING} transport=websocket [NC]
+    RewriteCond %{HTTP:Upgrade} =websocket [NC]
+    RewriteRule /(.*) "ws://{{ vhost.proxy.url.replace("https://", "").replace("http://", "") }}%{REQUEST_URI}" [P,L]
+
+    RewriteCond %{HTTP:Upgrade} websocket [NC]
+    RewriteCond %{HTTP:Connection} upgrade [NC]
+    RewriteRule /(.*) "wss://{{ vhost.proxy.url.replace("https://", "").replace("http://", "") }}%{REQUEST_URI}" [P,L]
+
+    # Define reverse proxy
+    ProxyTimeout 600
+    ProxyPreserveHost On
+    ProxyRequests On
+    ProxyPass "{{ vhost.proxy.pass }}" "{{ vhost.proxy.url }}/"
+    ProxyPassReverse "{{ vhost.proxy.pass }}" "{{ vhost.proxy.url }}/"

@@ -28,14 +28,28 @@
       changed_when: output.rc != 0
       ansible.builtin.shell: "echo \"{{ hostvars[host]['ansible_default_ipv4']['address'] }}  {{ host }} # from Molecule\" >> /etc/hosts"
 
-    - name: "Import cryptographic content if needed"
+    - name: "Import cryptographic content if needed (cert)"
       run_once: yes
       loop: "{{ inv_cert_bundles }}"
       loop_control:
         loop_var: bundle
+      when: inv_cert_bundles is defined and bundle.type == "cert"
       ansible.builtin.copy:
         src: "../../tests/certs/{{ bundle.name }}.zip"
         dest: "/tmp/{{ bundle.name }}.zip"
+        owner: "root"
+        group: "root"
+        mode: 0700
+
+    - name: "Import cryptographic content if needed (CA)"
+      run_once: yes
+      loop: "{{ inv_cert_bundles }}"
+      loop_control:
+        loop_var: bundle
+      when: inv_cert_bundles is defined and bundle.type == "CA"
+      ansible.builtin.copy:
+        src: "../../tests/certs/{{ bundle.name }}"
+        dest: "/tmp/{{ bundle.name }}"
         owner: "root"
         group: "root"
         mode: 0700
@@ -46,6 +60,7 @@
       loop: "{{ inv_cert_bundles }}"
       loop_control:
         loop_var: bundle
+      when: inv_cert_bundles is defined
       vars:
         add_certificates_bundle_name: "{{ bundle.name }}"
         add_certificates_bundle_type: "{{ bundle.type }}"
@@ -63,17 +78,17 @@
       tags:
         - "labocbz.install_apache"
       vars:
-        apache_https_listen_port: "{{ inv_apache_https_listen_port }}"
-        apache_http_listen_port: "{{ inv_apache_http_listen_port }}"
-        apache_modules: "{{ inv_apache_modules }}"
-        apache_enable_qos: "{{ inv_apache_enable_qos }}"
-        apache_qos_client_entries: "{{ inv_apache_qos_client_entries }}"
-        apache_qos_srv_max_conn_per_ip: "{{ inv_apache_qos_srv_max_conn_per_ip }}"
-        apache_qos_max_clients: "{{ inv_apache_qos_max_clients }}"
-        apache_qos_srv_max_conn_close: "{{ inv_apache_qos_srv_max_conn_close }}"
-        apache_qos_srv_min_data_rate: "{{ inv_apache_qos_srv_min_data_rate }}"
-        apache_enable_security: "{{ inv_apache_enable_security }}"
-        apache_security_core_version: "{{ tower_apache_security_core_version }}"
-        apache_enable_default_vhosts: "{{ inv_apache_enable_default_vhosts }}"
+        install_apache_https_listen_port: "{{ inv_install_apache_https_listen_port }}"
+        install_apache_http_listen_port: "{{ inv_install_apache_http_listen_port }}"
+        install_apache_modules: "{{ inv_install_apache_modules }}"
+        install_apache_enable_qos: "{{ inv_install_apache_enable_qos }}"
+        install_apache_enable_security: "{{ inv_install_apache_enable_security }}"
+        install_apache_security_core_version: "{{ inv_install_apache_security_core_version }}"
+        install_apache_remove_all_vhosts: "{{ inv_install_apache_remove_all_vhosts }}"
+        install_apache_loglevel: "{{ inv_install_apache_loglevel }}"
+        install_apache_security_version: "{{ inv_install_apache_security_version }}"
+        install_apache_enable_evasive: "{{ inv_install_apache_enable_evasive }}"
+        install_apache_enable_pagespeed: "{{ inv_install_apache_enable_pagespeed }}"
+        install_apache_enable_prefork: "{{ inv_install_apache_enable_prefork }}"
       ansible.builtin.include_role:
         name: "labocbz.install_apache"

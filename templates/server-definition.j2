@@ -1,0 +1,13 @@
+    # Set basic server informations
+    ServerAdmin {{ vhost.webmaster | default(add_apache_confs_webmaster) }}
+    DocumentRoot {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}
+    ServerSignature Off
+    LimitRequestBody {{ vhost.security.request_body | default(add_apache_confs_request_body) }}
+
+    ServerName {{ vhost.server.name }}
+    ServerAlias {{ vhost.server.name }}
+    {% if vhost.server.aliases | default(false) %}
+    {% for aliase in vhost.server.aliases %}
+    ServerAlias {{ aliase }}
+    {% endfor %}
+    {% endif %}

@@ -1,0 +1,18 @@
+    # Add some rules related to ModSecurity
+    <IfModule mod_security2.c>
+        {% if vhost.security.disabled | default(false) %}
+        # Disable ModSecurity
+        SecRuleEngine DetectionOnly
+        {% endif %}
+
+        SecRequestBodyLimit {{ vhost.security.request_body | default(add_apache_confs_security_body_limit) }}
+        SecRequestBodyNoFilesLimit {{ vhost.security.request_body | default(add_apache_confs_security_body_limit) }}
+        SecRequestBodyAccess Off
+        
+        {% if vhost.security.sec_rules_remove_by_id | default(false) %}
+        # Remove some rules
+        {% for rule in vhost.security.sec_rules_remove_by_id %}
+        SecRuleRemoveById {{ rule }}
+        {% endfor %}
+        {% endif %}
+    </IfModule>

@@ -4,234 +4,48 @@
 #                            #
 ##############################
 
-{% if apache_conf.is_black_hole | default(false) %}
+<VirtualHost *:{{ add_apache_confs_http_listen_port }}>
+{% include './templates/server-definition.j2' %}
 
-{% if apache_conf.is_black_hole %}
-<VirtualHost _default_:{{ apache_http_listen_port }}>
+{% include './templates/log-module.j2' %}
+
+{% include './templates/basic-module.j2' %}
+
+{% if vhost.ssl.enabled | default(false) %}
+
+{% include './templates/redirect-https-module.j2' %}
 {% else %}
-<VirtualHost *:{{ apache_http_listen_port }}>
+
+{% if vhost.security | default(false) %}
+
+{% include './templates/security-module.j2' %}
 {% endif %}
-{% else %}
-<VirtualHost *:{{ apache_http_listen_port }}>
+
+{% if vhost.rewrites | default(false) %}
+
+{% include './templates/rewrite-module.j2' %}
 {% endif %}
-        # Set basic server informations
-        ServerAdmin {{ apache_webmaster }}
-        DocumentRoot {{ apache_base_document_root }}/{{ apache_conf.server_name }}
-        ServerSignature Off
-        LimitRequestBody {{ apache_limit_request_body }}
-        {% if apache_conf.is_black_hole | default(false) %}
-        {% if apache_conf.is_black_hole %}
-        ServerName default
-        ServerAlias 127.0.0.1
-        ServerAlias {{ inventory_hostname }}
-        {% else %}
-        ServerName {{ apache_conf.server_name }}
-        {% endif %}
-        {% else %}
-        ServerName {{ apache_conf.server_name }}
-        {% endif %}
-        ServerAlias {{ apache_conf.server_name }}
-        {% if apache_conf.server_aliases | default(false) %}
-        {% for server_alias in apache_conf.server_aliases %}
-        ServerAlias {{ server_alias }}
-        {% endfor %}
-        {% endif %}
 
-        # Log ERROR and ACCES handling
-        LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
-        ErrorLog "{{ apache_base_document_root }}/{{ apache_conf.server_name }}/error.log"
-        CustomLog "{{ apache_base_document_root }}/{{ apache_conf.server_name }}/access.log" combined
+{% if vhost.redirect | default(false) %}
 
-        # Handler Certbot / Letsencrypt validations
-        <LocationMatch "^/.well-known/acme-challenge/">
-                ProxyPass !
-                ProxyPassReverse !
-                Allow from all
-        </LocationMatch>
+{% include './templates/redirect-module.j2' %}
+{% endif %}
 
-        <Files .htaccess>
-                Order allow,deny
-                Deny from all
-        </Files>
+{% if vhost.ldap | default(false) %}
 
-        <Directory {{ apache_base_document_root }}/{{ apache_conf.server_name }}>
-                Options +FollowSymlinks
-                order allow,deny
-                allow from all
-                Options None
-                AllowOverride None
-        </Directory>
+{% include './templates/ldap-module.j2' %}
+{% endif %}
 
-        # Enable HSTS (HTTP Strict Transport Security) to prevent man-in-the-middle attacks
-        # Enable X-XSS-Protection to prevent cross-site scripting (XSS) attacks
-        # Enable X-Frame-Options to prevent clickjacking attacks
-        # Enable X-Content-Type-Options to prevent MIME-sniffing attacks
-        <IfModule mod_headers.c>
-                Header always set Strict-Transport-Security "max-age=63072002; includeSubDomains; preload"
-                Header always set X-XSS-Protection "1; mode=block"
-                Header always set X-Frame-Options "SAMEORIGIN"
-                Header always set X-Content-Type-Options "nosniff"
-                Header always set Feature-Policy "autoplay 'none'; camera 'none'"
-                Header always set Access-Control-Allow-Origin "*"
-                Header always set Permissions-Policy "geolocation=();midi=();notifications=();push=();sync-xhr=();microphone=();camera=();magnetometer=();gyroscope=();speaker=(self);vibrate=();fullscreen=(self);payment=();"
-                Header always set Referrer-Policy "same-origin"
-                Header always set Content-Security-Policy ""
-        </IfModule>
-        {% if apache_mod_deflate_available %}
-        
-        # Enable mod_deflate compression
-        <IfModule mod_deflate.c>
-                # Compress text, HTML, JavaScript, and CSS files
-                AddOutputFilterByType DEFLATE text/plain
-                AddOutputFilterByType DEFLATE text/html
-                AddOutputFilterByType DEFLATE application/javascript
-                AddOutputFilterByType DEFLATE text/css
-                # Disable compression for certain file types
-                SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
-                SetEnvIfNoCase Request_URI \.(?:exe|t?gz|zip|bz2|sit|rar)$ no-gzip dont-vary
-                # Set the minimum and maximum compression level
-                DeflateCompressionLevel 6
-                DeflateFilterNote Input instream
-                DeflateFilterNote Output outstream
-                DeflateFilterNote Ratio ratio
-                # Set the minimum size of a file that will be compressed
-                DeflateBufferSize 8096
-                DeflateMemLevel 8
-                # For proxies
-                Header append Vary User-Agent env=!dont-vary
-        </IfModule>
-        {% endif %}
+{% if vhost.proxy | default(false) %}
 
-        {% if apache_mod_security_available %}
-        <IfModule mod_security2.c>
-                {% if apache_conf.secRuleEngineDetectionOnly | default(false) %}
-                {% if apache_conf.secRuleEngineDetectionOnly %}
-                SecRuleEngine DetectionOnly
-                SecRequestBodyLimit {{ apache_limit_request_body }}
-                SecRequestBodyNoFilesLimit {{ apache_limit_request_body }}
-                SecRequestBodyAccess Off
-                {% endif %}
-                {% endif %}
-                {% if apache_conf.sec_rules_remove_by_id | default(false) %}
-                {% for sec_rule_remove_by_id in apache_conf.sec_rules_remove_by_id %}
-                SecRuleRemoveById {{ sec_rule_remove_by_id }}
-                {% endfor %}
-                {% endif %}
-        </IfModule>
-        {% endif %}
+{% include './templates/proxy-module.j2' %}
+{% endif %}
 
-        {% if apache_conf.rewrite_rules | default(false) %}
-        <IfModule mod_rewrite.c>
-                RewriteEngine on
-                {% for rewrite_rule in apache_conf.rewrite_rules %}
-                RewriteRule {{ rewrite_rule }}
-                {% endfor %}
-        </IfModule>
-        {% endif %}
+{% if vhost.custom_confs | default(false) %}
+{% include './templates/custom-conf-module.j2' %}
+{% endif %}
 
-        {% if apache_conf.redirect_host | default(false) %}
-        Redirect permanent / {{ apache_conf.redirect_host }}/
-        RedirectMatch permanent ^/(.*)$ {{ apache_conf.redirect_host }}/$1
-        {% endif %}
-        {% if apache_conf.ldap_groups | default(false) %}
-        {% if apache_conf.ldap_exception_base_urls | default(false) %}
-        {% for ldap_exception_base_url in apache_conf.ldap_exception_base_urls %}
-        <LocationMatch "^{{ ldap_exception_base_url }}/(.*)$">
-                Satisfy Any
-                Allow from all
-        </LocationMatch>
-        {% endfor %}
-        {% endif %}
-        
-        <Location />
-                # Enable mod_authnz_ldap and mod_headers
-                #LDAPSharedCacheSize 50000
-                #LDAPCacheEntries 1024
-                #LDAPCacheTTL 600
-                #LDAPOpCacheEntries 1024
-                #LDAPOpCacheTTL 600
-                # Configure LDAP authentication
-                AuthType Basic
-                AuthName "LDAP Authentication"
-                AuthBasicProvider ldap
-                AuthLDAPURL {{ apache_auth_ldap_url }}
-                AuthLDAPGroupAttribute memberUid
-                AuthLDAPGroupAttributeIsDN off
-                {% for ldap_group in apache_conf.ldap_groups %}
-                Require ldap-group CN={{ ldap_group }},OU=group,{{ apache_ldap_dc }}
-                {% endfor %}
-        </Location>
-        {% endif %}
 
-        {% if apache_conf.proxyPass | default(false) %}
-        {% if 'https://' in apache_conf.proxyPass %}
-        SSLProxyEngine on
-        SSLProxyVerify none
-        SSLProxyCheckPeerCN off
-        SSLProxyCheckPeerName off
-        SSLProxyCheckPeerExpire off
-        {% endif %}
-        
-        {% if apache_conf.ssl %}
-        RequestHeader set X-Forwarded-Proto https
-        RequestHeader set X-Forwarded-Ssl on
-        RequestHeader set X-Url-Scheme https
-        RequestHeader set X-Forwarded-Proto: https
-        # Non-standard header used by Microsoft applications and load-balancers:
-        RequestHeader set Front-End-Https: on
-        {% else %}
-        RequestHeader set X-Forwarded-Proto http
-        RequestHeader set X-Forwarded-Ssl off
-        RequestHeader set X-Url-Scheme http
-        RequestHeader set X-Forwarded-Proto: http
-        # Non-standard header used by Microsoft applications and load-balancers:
-        RequestHeader set Front-End-Https: off
-        {% endif %}
+{% endif %}
 
-        RewriteEngine On
-        RewriteCond %{REQUEST_URI}  ^/socket.io [NC]
-        RewriteCond %{QUERY_STRING} transport=websocket [NC]
-        RewriteCond %{HTTP:Upgrade} =websocket [NC]
-        RewriteRule /(.*) ws://{{ apache_conf.proxy_pass_url.replace("https://", "").replace("http://", "") }};{{ apache_conf.proxy_pass_port }}/$1 [P,L]
-
-        RewriteCond %{HTTP:Upgrade} websocket [NC]
-        RewriteCond %{HTTP:Connection} upgrade [NC]
-        RewriteRule .* "wss://{{ apache_conf.proxy_pass_url.replace("https://", "").replace("http://", "") }}:{{ apache_conf.proxy_pass_port }}%{REQUEST_URI}" [P,L]
-
-        ProxyTimeout 600
-        ProxyPreserveHost On
-        ProxyRequests On
-        ProxyPass / "{{ apache_conf.proxy_pass_url }}:{{ apache_conf.proxy_pass_port }}/"
-        ProxyPassReverse / "{{ apache_conf.proxy_pass_url }}:{{ apache_conf.proxy_pass_port }}/"
-        {% endif %}
-
-        {% if apache_mod_pagespeed_available %}
-        <IfModule pagespeed_module>
-                # Enable mod_pagespeed
-                ModPagespeed on
-                # Set the PageSpeed file cache directory
-                ModPagespeedFileCachePath {{ apache_base_document_root }}/{{ apache_conf.server_name }}/mod_pagespeed/
-                # Set the PageSpeed rewriting level
-                ModPagespeedRewriteLevel CoreFilters
-                # Enable some specific PageSpeed filters
-                # ModPagespeedDisableFilters and ModPagespeedEnableFilters
-                ModPagespeedEnableFilters rewrite_javascript,rewrite_css
-                ModPagespeedEnableFilters collapse_whitespace,elide_attributes
-                ModPagespeedEnableFilters in_place_optimize_for_browser
-                ModPagespeedEnableFilters canonicalize_javascript_libraries
-                ModPagespeedEnableFilters add_instrumentation
-        </IfModule>
-        {% endif %}
-
-        {% if apache_conf.ssl %}
-        # Redirect all HTTP traffic to HTTPS
-        RewriteEngine On
-        RewriteCond %{HTTPS} off
-        RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-        {% endif %}
-
-        RewriteEngine On
-        RewriteCond %{HTTP_HOST} !^{{ apache_conf.server_name }}$ [NC]
-        RewriteRule ^(.*)$ http://{{ apache_conf.server_name }}/$1 [L,R=301]
-        
 </VirtualHost>
