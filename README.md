@@ -336,6 +336,13 @@ Here you can put your change to keep a trace of your work and decisions.
 * If a conf use HTTPS, role redirect trafic to HTTPS directly instead of rendering 2 files completly (see code for more details)
 * As an example, a phpmyadmin custom_conf is present, but not working because its required more vars, so it's just an example, please check if before use it
 
+### 2023-10-06: New CICD, new Images
+
+* New CI/CD scenario name
+* Molecule now use remote Docker image by Lord Robin Crombez
+* Molecule now use custom Docker image in CI/CD by env vars
+* New CICD with needs and optimization
+
 ## Authors
 
 * Lord Robin Crombez
