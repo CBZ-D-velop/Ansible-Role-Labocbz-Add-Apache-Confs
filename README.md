@@ -343,6 +343,10 @@ Here you can put your change to keep a trace of your work and decisions.
 * Molecule now use custom Docker image in CI/CD by env vars
 * New CICD with needs and optimization
 
+### 2023-11-16: Redirection
+
+* HTTPS redirection is now based on %{SERVER_PORT}
+
 ## Authors
 
 * Lord Robin Crombez
