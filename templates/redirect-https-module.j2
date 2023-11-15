@@ -1,4 +1,4 @@
     # Redirect all HTTP traffic to HTTPS
     RewriteEngine On
     RewriteCond %{HTTPS} off
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}:{{ add_apache_confs_https_listen_port }}%{REQUEST_URI} [L,R=301]
+    RewriteRule ^(.*)$ https://{{ vhost.server.name }}:{{ add_apache_confs_https_listen_port }}%{REQUEST_URI} [L,R=301]
