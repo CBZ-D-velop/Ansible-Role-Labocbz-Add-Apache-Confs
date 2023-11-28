@@ -1,13 +1,18 @@
     # Log ERROR and ACCES handling
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
+    SetEnvIf Request_Method OPTIONS blackhole-log
     ErrorLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/error.log"
-    CustomLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/access.log" combined
+    CustomLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/access.log" combined env=!blackhole-log
 
     <IfModule mod_evasive20.c>
             DOSLogDir {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/mod_evasive.log
     </IfModule>
     <IfModule security2_module>
             SecAuditLog {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/modsec_audit.log
+            SecAuditEngine RelevantOnly
+            SecAuditLogParts ABCFHZ 
+            SecAuditLogType concurrent 
+            SecAuditLogRelevantStatus ^(?:5|4(?!04))
     </IfModule>
     <IfModule pagespeed_module>
             # Set the PageSpeed file cache directory
