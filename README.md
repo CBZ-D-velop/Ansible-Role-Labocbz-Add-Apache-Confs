@@ -347,6 +347,11 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * HTTPS redirection is now based on %{SERVER_PORT}
 
+### 2023-11-28: Logs and Redirect
+
+* Fix the redirection
+* Add ENV for no log
+
 ## Authors
 
 * Lord Robin Crombez
