@@ -1,6 +1,7 @@
     # Log ERROR and ACCES handling
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
     SetEnvIf Request_Method OPTIONS blackhole-log
+    SetEnvIf Request_URI "^/$" blackhole-log
     ErrorLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/error.log"
     CustomLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/access.log" combined env=!blackhole-log
 
