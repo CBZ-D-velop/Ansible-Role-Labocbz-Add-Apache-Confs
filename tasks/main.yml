@@ -11,9 +11,9 @@
       dest: "{{ add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTP.conf"
       lstrip_blocks: yes
       force: yes
-      owner: "root"
-      group: "root"
-      mode: "0700"
+      owner: "www-data"
+      group: "www-data"
+      mode: "0776"
 
   - name: "Create apache confs files: HTTPS"
     when: vhost.ssl.enabled | default(false)
@@ -25,9 +25,9 @@
       dest: "{{ add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTPS.conf"
       lstrip_blocks: yes
       force: yes
-      owner: "root"
-      group: "root"
-      mode: "0700"
+      owner: "www-data"
+      group: "www-data"
+      mode: "0776"
 
   - name: "Create DocumentsRoot directory"
     loop: "{{ add_apache_confs_configurations }}"
@@ -39,9 +39,9 @@
       path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}"
       state: directory
       recurse: yes
-      owner: "root"
-      group: "root"
-      mode: "0700"
+      owner: "www-data"
+      group: "www-data"
+      mode: "0776"
 
   - name: "Enable Apache2 configurations"
     loop: "{{ add_apache_confs_configurations }}"
