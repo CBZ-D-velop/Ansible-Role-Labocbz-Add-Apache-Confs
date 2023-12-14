@@ -15,7 +15,7 @@ inv_install_apache_modules:
   - "proxy_wstunnel"
 
 inv_install_apache_loglevel: "info"
-inv_install_apache_remove_all_vhosts: true
+inv_install_apache_remove_all_vhosts: false
 
 inv_install_apache_enable_qos: false
 inv_install_apache_enable_security: false
