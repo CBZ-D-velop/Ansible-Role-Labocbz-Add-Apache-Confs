@@ -17,10 +17,10 @@ inv_install_apache_modules:
 inv_install_apache_loglevel: "info"
 inv_install_apache_remove_all_vhosts: true
 
-inv_install_apache_enable_qos: true
-inv_install_apache_enable_security: true
-inv_install_apache_enable_evasive: true
-inv_install_apache_enable_pagespeed: true
+inv_install_apache_enable_qos: false
+inv_install_apache_enable_security: false
+inv_install_apache_enable_evasive: false
+inv_install_apache_enable_pagespeed: false
 inv_install_apache_enable_prefork: true
 
 inv_install_apache_security_core_version: "3.3.0"

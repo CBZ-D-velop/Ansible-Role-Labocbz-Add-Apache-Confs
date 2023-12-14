@@ -1,4 +1,8 @@
 ---
+inv_prepare_host_system_users:
+  - login: "www-data"
+    group: "www-data"
+
 inv_add_apache_confs_http_listen_port: 80
 inv_add_apache_confs_https_listen_port: 443
 
