@@ -130,6 +130,9 @@ Some vars a required to run this role:
 add_apache_confs_http_listen_port: 80
 add_apache_confs_https_listen_port: 443
 
+add_apache_confs_apache_group: "www-data"
+add_apache_confs_apache_user: "www-data"
+
 add_apache_confs_ldap_url: "ldap.your.domain"
 add_apache_confs_ldap_port: 389
 add_apache_confs_ldap_dc: "DC=sub,DC=domain,DC=net"
@@ -351,6 +354,10 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * Fix the redirection
 * Add ENV for no log
+
+### 2023-12-14: System users
+
+* Role can now use system users and address groups
 
 ## Authors
 
