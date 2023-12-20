@@ -13,7 +13,7 @@
       force: yes
       owner: "{{ add_apache_confs_apache_user }}"
       group: "{{ add_apache_confs_apache_group }}"
-      mode: "0755"
+      mode: "0775"
 
   - name: "Create apache confs files: HTTPS"
     when: vhost.ssl.enabled | default(false)
@@ -27,7 +27,7 @@
       force: yes
       owner: "{{ add_apache_confs_apache_user }}"
       group: "{{ add_apache_confs_apache_group }}"
-      mode: "0755"
+      mode: "0775"
 
   - name: "Create DocumentsRoot directory"
     loop: "{{ add_apache_confs_configurations }}"
@@ -41,7 +41,7 @@
       recurse: yes
       owner: "{{ add_apache_confs_apache_user }}"
       group: "{{ add_apache_confs_apache_group }}"
-      mode: "0755"
+      mode: "0775"
 
   - name: "Enable Apache2 configurations"
     loop: "{{ add_apache_confs_configurations }}"
