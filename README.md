@@ -161,6 +161,7 @@ add_apache_confs_configurations:
     proxy:
       url: "https://my.proxy"
       pass: "/"
+      preserve_host: "Off"
     security:
       disabled: true
       request_body: 4096000
@@ -358,6 +359,10 @@ Here you can put your change to keep a trace of your work and decisions.
 ### 2023-12-14: System users
 
 * Role can now use system users and address groups
+
+### 2023-27-12: Preserve host
+
+* You can now disable the preverse host option (in cause on empty request / logs)
 
 ## Authors
 
