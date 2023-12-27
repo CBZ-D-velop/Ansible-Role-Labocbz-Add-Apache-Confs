@@ -38,7 +38,7 @@
 
     # Define reverse proxy
     ProxyTimeout 600
-    ProxyPreserveHost {{ vhost.proxy.preserve_host  | default('On')}}
+    ProxyPreserveHost On
     ProxyRequests On
     ProxyPass "{{ vhost.proxy.pass }}" "{{ vhost.proxy.url }}/"
     ProxyPassReverse "{{ vhost.proxy.pass }}" "{{ vhost.proxy.url }}/"

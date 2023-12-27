@@ -161,7 +161,6 @@ add_apache_confs_configurations:
     proxy:
       url: "https://my.proxy"
       pass: "/"
-      preserve_host: "Off"
     security:
       disabled: true
       request_body: 4096000
