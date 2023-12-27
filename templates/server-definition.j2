@@ -11,3 +11,4 @@
     ServerAlias {{ aliase }}
     {% endfor %}
     {% endif %}
+    RequestHeader set Host {{ vhost.server.name }}
