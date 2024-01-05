@@ -3,6 +3,7 @@
     DocumentRoot {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}
     ServerSignature Off
     LimitRequestBody {{ vhost.security.request_body | default(add_apache_confs_request_body) }}
+    RequestHeader set Host {{ vhost.server.name }}
 
     ServerName {{ vhost.server.name }}
     ServerAlias {{ vhost.server.name }}
@@ -11,4 +12,4 @@
     ServerAlias {{ aliase }}
     {% endfor %}
     {% endif %}
-    RequestHeader set Host {{ vhost.server.name }}
+
