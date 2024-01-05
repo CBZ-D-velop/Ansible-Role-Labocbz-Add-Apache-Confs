@@ -1,4 +1,4 @@
-    {% if 'https://' in vhost.proxy.url %}
+    {% if "https://" in vhost.proxy.url %}
     # Define SSL proxy target settings
     SSLProxyEngine on
     SSLProxyVerify none
@@ -7,7 +7,7 @@
     SSLProxyCheckPeerExpire off
     {% endif %}
 
-    {% if vhost.proxy.ssl | default(false) %}
+    {% if vhost.ssl.enabled | default(false) %}
     # Define vhost SSL setting for SSL proxying
     RequestHeader set X-Forwarded-Proto https
     RequestHeader set X-Forwarded-Ssl on
