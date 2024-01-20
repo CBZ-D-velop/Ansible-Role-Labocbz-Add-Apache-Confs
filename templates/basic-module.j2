@@ -17,3 +17,15 @@
             Order allow,deny
             Deny from all
     </Files>
+
+    Alias /http-check {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check
+    <Directory "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check">
+            Options -Indexes +FollowSymLinks
+            AllowOverride None
+            Order allow,deny
+            Require all granted
+            Allow from all
+    
+            SetEnvIf Request_Method OPTIONS blackhole-log
+            SetEnvIf Request_URI "^/$" blackhole-log
+    </Directory>

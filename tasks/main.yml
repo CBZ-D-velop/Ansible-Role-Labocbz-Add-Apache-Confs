@@ -52,3 +52,10 @@
     ansible.builtin.command: "a2ensite {{ vhost.server.name }}-HTTP*.conf"
     args:
       chdir: "{{ add_apache_confs_conf_path }}"
+
+  - name: "Handle http-check for LBs"
+    loop: "{{ add_apache_confs_configurations }}"
+    loop_control:
+      loop_var: vhost
+    ansible.builtin.include_tasks:
+      file: "./handle_http_check.yml"
