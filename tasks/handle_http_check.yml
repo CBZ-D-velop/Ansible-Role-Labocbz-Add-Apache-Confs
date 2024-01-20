@@ -6,7 +6,7 @@
         path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check"
 
     - name: "handle_http_check | Add {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check"
-      when: file_check.stat.exists
+      when: not file_check.stat.exists
       register: output
       changed_when: output.changed != true and output.changed != false
       ansible.builtin.file:
@@ -23,7 +23,7 @@
         path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check/index.gif"
 
     - name: "handle_http_check | Add {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check/index.gif"
-      when: file_check.stat.exists
+      when: not file_check.stat.exists
       register: output
       changed_when: output.changed != true and output.changed != false
       ansible.builtin.file:
