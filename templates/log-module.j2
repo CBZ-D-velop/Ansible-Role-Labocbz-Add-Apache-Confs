@@ -10,7 +10,8 @@
     </IfModule>
     <IfModule security2_module>
             SecAuditLog {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/modsec_audit.log
-            SecAuditEngine RelevantOnly
+            SecAuditEngine Off
+            #SecAuditEngine RelevantOnly
             SecAuditLogParts ABCFHZ 
             SecAuditLogType concurrent 
             SecAuditLogRelevantStatus ^(?:5|4(?!04))
