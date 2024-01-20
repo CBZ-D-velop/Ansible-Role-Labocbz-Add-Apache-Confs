@@ -11,8 +11,8 @@
       changed_when: output.changed != true and output.changed != false
       ansible.builtin.file:
         path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check"
-        owner: "{{ install_apache_user }}"
-        group: "{{ install_apache_group }}"
+        owner: "{{ add_apache_confs_apache_user }}"
+        group: "{{ add_apache_confs_apache_group }}"
         mode: "0775"
         state: directory
         recurse: yes
@@ -28,7 +28,7 @@
       changed_when: output.changed != true and output.changed != false
       ansible.builtin.file:
         path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check/index.gif"
-        owner: "{{ install_apache_user }}"
-        group: "{{ install_apache_group }}"
+        owner: "{{ add_apache_confs_apache_user }}"
+        group: "{{ add_apache_confs_apache_group }}"
         mode: "0775"
         state: touch
