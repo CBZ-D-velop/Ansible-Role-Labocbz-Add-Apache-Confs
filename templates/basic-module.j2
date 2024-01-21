@@ -19,6 +19,9 @@
     </Files>
 
     Alias /http-check {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check
+    {% if vhost.proxy | default(false) %}
+    ProxyPass /http-check/ !
+    {% endif %}
     <Directory "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/http-check">
             Options -Indexes +FollowSymLinks
             AllowOverride None
