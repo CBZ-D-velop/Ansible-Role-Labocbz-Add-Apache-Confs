@@ -5,12 +5,6 @@ add_apache_confs_https_listen_port: 443
 add_apache_confs_apache_group: "www-data"
 add_apache_confs_apache_user: "www-data"
 
-add_apache_confs_ldap_url: "ldap.your.domain"
-add_apache_confs_ldap_port: 389
-add_apache_confs_ldap_dc: "DC=sub,DC=domain,DC=net"
-add_apache_confs_auth_ldap_url: "ldap://{{ add_apache_confs_ldap_url }}:{{ add_apache_confs_ldap_port }}/OU=People,{{ add_apache_confs_ldap_dc }}?uid"
-add_apache_confs_custom_ldap_base_header: "ldap-auth"
-
 add_apache_confs_webmaster: "your.webmaster@domain.tld"
 add_apache_confs_request_body: 0
 add_apache_confs_security_body_limit: 1024000000
@@ -46,13 +40,14 @@ add_apache_confs_configurations:
       - ^/\.well-known/nodeinfo /index.php/.well-known/nodeinfo [R=301,L]
     redirect: "http://my.newest.site.net"
     ldap:
-      url: "{{ add_apache_confs_auth_ldap_url }}"
+      url: "ldap://127.0.0.1:10389/dc=example,dc=com?uid"
       attribute: "memberUid"
-      attribute_is_dn: "off"
-      dc: "{{ add_apache_confs_ldap_dc }}"
+      attribute_is_dn: "on"
+      dn: "uid=admin,ou=system"
+      password: "secret"
       groups:
-        - admin
-        - users
+        - "cn=apache,dc=example,dc=com"
+        - "cn=apache2,dc=example,dc=com"
       exception_base_urls:
         - /api
     custom_confs:

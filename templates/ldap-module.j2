@@ -15,12 +15,16 @@
         AuthType Basic
         AuthName "LDAP Authentication"
         AuthBasicProvider ldap
-        AuthLDAPURL {{ vhost.ldap.url | default(add_apache_confs_auth_ldap_url) }}
-        AuthLDAPGroupAttribute {{ vhost.ldap.attribute | default("memberUid") }}
-        AuthLDAPGroupAttributeIsDN {{ vhost.ldap.attribute_is_dn | default("off") }}
+        AuthLDAPURL {{ vhost.ldap.url }}
+
+        AuthLDAPBindDN {{ vhost.ldap.dn }}
+        AuthLDAPBindPassword {{ vhost.ldap.password }}
+
+        AuthLDAPGroupAttribute {{ vhost.ldap.attribute }}
+        AuthLDAPGroupAttributeIsDN {{ vhost.ldap.attribute_is_dn | default("on") }}
 
         # Define groups allowed to access
         {% for ldap_group in vhost.ldap.groups %}
-        Require ldap-group CN={{ ldap_group }},OU=group,{{ vhost.ldap.dc | default( add_apache_confs_ldap_dc) }}
+        Require ldap-group {{ ldap_group }}
         {% endfor %}
     </Location>
