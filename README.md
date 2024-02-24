@@ -281,11 +281,8 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
   vars:
     add_apache_confs__http_listen_port: "{{ inv_add_apache_confs__http_listen_port }}"
     add_apache_confs__https_listen_port: "{{ inv_add_apache_confs__https_listen_port }}"
-    add_apache_confs__ldap_url: "{{ inv_add_apache_confs__ldap_url }}"
-    add_apache_confs__ldap_port: "{{ inv_add_apache_confs__ldap_port }}"
-    add_apache_confs__ldap_dc: "{{ inv_add_apache_confs__ldap_dc }}"
-    add_apache_confs__auth_ldap_url: "{{ inv_add_apache_confs__auth_ldap_url }}"
-    add_apache_confs__custom_ldap_base_header: "{{ inv_add_apache_confs__custom_ldap_base_header }}"
+    add_apache_confs__apache_group: "{{ inv_add_apache_confs__apache_group }}"
+    add_apache_confs__apache_user: "{{ inv_add_apache_confs__apache_user }}"
     add_apache_confs__webmaster: "{{ inv_add_apache_confs__webmaster }}"
     add_apache_confs__request_body: "{{ inv_add_apache_confs__request_body }}"
     add_apache_confs__security_body_limit: "{{ inv_add_apache_confs__security_body_limit }}"
