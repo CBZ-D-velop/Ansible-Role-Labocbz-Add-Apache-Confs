@@ -5,56 +5,56 @@
   - name: "Create apache confs files: HTTP"
     loop_control:
       loop_var: vhost
-    loop: "{{ add_apache_confs_configurations }}"
+    loop: "{{ add_apache_confs__configurations }}"
     ansible.builtin.template:
       src: "templates/vhost-HTTP.conf.j2"
-      dest: "{{ add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTP.conf"
+      dest: "{{ add_apache_confs__conf_path }}/{{ vhost.server.name }}-HTTP.conf"
       lstrip_blocks: yes
       force: yes
-      owner: "{{ add_apache_confs_apache_user }}"
-      group: "{{ add_apache_confs_apache_group }}"
+      owner: "{{ add_apache_confs__apache_user }}"
+      group: "{{ add_apache_confs__apache_group }}"
       mode: "0775"
 
   - name: "Create apache confs files: HTTPS"
     when: vhost.ssl.enabled | default(false)
-    loop: "{{ add_apache_confs_configurations }}"
+    loop: "{{ add_apache_confs__configurations }}"
     loop_control:
       loop_var: vhost
     ansible.builtin.template:
       src: "templates/vhost-HTTPS.conf.j2"
-      dest: "{{ add_apache_confs_conf_path }}/{{ vhost.server.name }}-HTTPS.conf"
+      dest: "{{ add_apache_confs__conf_path }}/{{ vhost.server.name }}-HTTPS.conf"
       lstrip_blocks: yes
       force: yes
-      owner: "{{ add_apache_confs_apache_user }}"
-      group: "{{ add_apache_confs_apache_group }}"
+      owner: "{{ add_apache_confs__apache_user }}"
+      group: "{{ add_apache_confs__apache_group }}"
       mode: "0775"
 
   - name: "Create DocumentsRoot directory"
-    loop: "{{ add_apache_confs_configurations }}"
+    loop: "{{ add_apache_confs__configurations }}"
     register: output
     changed_when: output.size <= 0
     loop_control:
       loop_var: vhost
     ansible.builtin.file:
-      path: "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}"
+      path: "{{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}"
       state: directory
       recurse: yes
-      owner: "{{ add_apache_confs_apache_user }}"
-      group: "{{ add_apache_confs_apache_group }}"
+      owner: "{{ add_apache_confs__apache_user }}"
+      group: "{{ add_apache_confs__apache_group }}"
       mode: "0775"
 
   - name: "Enable Apache2 configurations"
-    loop: "{{ add_apache_confs_configurations }}"
+    loop: "{{ add_apache_confs__configurations }}"
     loop_control:
       loop_var: vhost
     register: output
     changed_when: output.rc != 0
     ansible.builtin.command: "a2ensite {{ vhost.server.name }}-HTTP*.conf"
     args:
-      chdir: "{{ add_apache_confs_conf_path }}"
+      chdir: "{{ add_apache_confs__conf_path }}"
 
   - name: "Handle http-check for LBs"
-    loop: "{{ add_apache_confs_configurations }}"
+    loop: "{{ add_apache_confs__configurations }}"
     loop_control:
       loop_var: vhost
     ansible.builtin.include_tasks:

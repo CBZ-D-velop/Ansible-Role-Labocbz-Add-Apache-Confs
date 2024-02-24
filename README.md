@@ -127,37 +127,37 @@ Some vars a required to run this role:
 
 ```YAML
 ---
-add_apache_confs_http_listen_port: 80
-add_apache_confs_https_listen_port: 443
+add_apache_confs__http_listen_port: 80
+add_apache_confs__https_listen_port: 443
 
-add_apache_confs_apache_group: "www-data"
-add_apache_confs_apache_user: "www-data"
+add_apache_confs__apache_group: "www-data"
+add_apache_confs__apache_user: "www-data"
 
-add_apache_confs_ldap_url: "ldap.your.domain"
-add_apache_confs_ldap_port: 389
-add_apache_confs_ldap_dc: "DC=sub,DC=domain,DC=net"
-add_apache_confs_auth_ldap_url: "ldap://{{ add_apache_confs_ldap_url }}:{{ add_apache_confs_ldap_port }}/OU=People,{{ add_apache_confs_ldap_dc }}?uid"
-add_apache_confs_custom_ldap_base_header: "ldap-auth"
+add_apache_confs__ldap_url: "ldap.your.domain"
+add_apache_confs__ldap_port: 389
+add_apache_confs__ldap_dc: "DC=sub,DC=domain,DC=net"
+add_apache_confs__auth_ldap_url: "ldap://{{ add_apache_confs__ldap_url }}:{{ add_apache_confs__ldap_port }}/OU=People,{{ add_apache_confs__ldap_dc }}?uid"
+add_apache_confs__custom_ldap_base_header: "ldap-auth"
 
-add_apache_confs_webmaster: "your.webmaster@domain.tld"
-add_apache_confs_request_body: 0
-add_apache_confs_security_body_limit: 1024000000
+add_apache_confs__webmaster: "your.webmaster@domain.tld"
+add_apache_confs__request_body: 0
+add_apache_confs__security_body_limit: 1024000000
 
-add_apache_confs_ssl_files_path: "/etc/apache2/ssl"
-add_apache_confs_conf_path: "/etc/apache2/sites-available"
-add_apache_confs_base_document_root: "/var/www/html"
+add_apache_confs__ssl_files_path: "/etc/apache2/ssl"
+add_apache_confs__conf_path: "/etc/apache2/sites-available"
+add_apache_confs__base_document_root: "/var/www/html"
 
-add_apache_confs_configurations:
+add_apache_confs__configurations:
   - server:
       name: "my-apache-site-1.domain.tld"
       aliases:
         - "oneAlias.net"
         - "anotherAlias.com"
-      webmaster: "{{ add_apache_confs_webmaster }}"
+      webmaster: "{{ add_apache_confs__webmaster }}"
     ssl:
       enabled: true
-      key: "{{ add_apache_confs_ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
-      crt: "{{ add_apache_confs_ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
+      key: "{{ add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
+      crt: "{{ add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
     proxy:
       url: "https://my.proxy"
       pass: "/"
@@ -174,10 +174,10 @@ add_apache_confs_configurations:
       - ^/\.well-known/nodeinfo /index.php/.well-known/nodeinfo [R=301,L]
     redirect: "http://my.newest.site.net"
     ldap:
-      url: "{{ add_apache_confs_auth_ldap_url }}"
+      url: "{{ add_apache_confs__auth_ldap_url }}"
       attribute: "memberUid"
       attribute_is_dn: "off"
-      dc: "{{ add_apache_confs_ldap_dc }}"
+      dc: "{{ add_apache_confs__ldap_dc }}"
       groups:
         - admin
         - users
@@ -200,34 +200,35 @@ In order to surchage vars, you have multiples possibilities but for mains cases 
 
 ```YAML
 ---
-inv_add_apache_confs_http_listen_port: 80
-inv_add_apache_confs_https_listen_port: 443
+inv_prepare_host__system_users:
+  - login: "www-data"
+    group: "www-data"
 
-inv_add_apache_confs_ldap_url: "ldap.your.domain"
-inv_add_apache_confs_ldap_port: 389
-inv_add_apache_confs_ldap_dc: "DC=sub,DC=domain,DC=net"
-inv_add_apache_confs_auth_ldap_url: "ldap://{{ inv_add_apache_confs_ldap_url }}:{{ inv_add_apache_confs_ldap_port }}/OU=People,{{ inv_add_apache_confs_ldap_dc }}?uid"
-inv_add_apache_confs_custom_ldap_base_header: "ldap-auth"
+inv_add_apache_confs__http_listen_port: 80
+inv_add_apache_confs__https_listen_port: 443
 
-inv_add_apache_confs_webmaster: "your.webmaster@domain.tld"
-inv_add_apache_confs_request_body: 0
-inv_add_apache_confs_security_body_limit: 1024000000
+inv_add_apache_confs__apache_group: "www-data"
+inv_add_apache_confs__apache_user: "www-data"
 
-inv_add_apache_confs_ssl_files_path: "/etc/apache2/ssl"
-inv_add_apache_confs_conf_path: "/etc/apache2/sites-available"
-inv_add_apache_confs_base_document_root: "/var/www/html"
+inv_add_apache_confs__webmaster: "your.webmaster@domain.tld"
+inv_add_apache_confs__request_body: 0
+inv_add_apache_confs__security_body_limit: 1024000000
 
-inv_add_apache_confs_configurations:
+inv_add_apache_confs__ssl_files_path: "/etc/apache2/ssl"
+inv_add_apache_confs__conf_path: "/etc/apache2/sites-available"
+inv_add_apache_confs__base_document_root: "/var/www/html"
+
+inv_add_apache_confs__configurations:
   - server:
       name: "my-apache-site-1.domain.tld"
       aliases:
         - "oneAlias.net"
         - "anotherAlias.com"
-      webmaster: "{{ inv_add_apache_confs_webmaster }}"
+      webmaster: "{{ inv_add_apache_confs__webmaster }}"
     ssl:
       enabled: true
-      key: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
-      crt: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
+      key: "{{ inv_add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
+      crt: "{{ inv_add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
     proxy:
       url: "https://my.proxy"
       pass: "/"
@@ -244,41 +245,23 @@ inv_add_apache_confs_configurations:
       - ^/\.well-known/nodeinfo /index.php/.well-known/nodeinfo [R=301,L]
     redirect: "http://my.newest.site.net"
     ldap:
-      url: "{{ inv_add_apache_confs_auth_ldap_url }}"
+      url: "ldap://127.0.0.1:10389/dc=example,dc=com?uid"
       attribute: "memberUid"
-      attribute_is_dn: "off"
-      dc: "{{ inv_add_apache_confs_ldap_dc }}"
+      attribute_is_dn: "on"
+      dn: "uid=admin,ou=system"
+      password: "secret"
       groups:
-        - admin
-        - users
+        - "cn=apache,dc=example,dc=com"
+        - "cn=apache2,dc=example,dc=com"
       exception_base_urls:
         - /api
-
-  - server:
-      name: "my-apache-site-2.domain.tld"
-      aliases:
-        - "localhost"
-        - "127.0.0.1"
-    ssl:
-      enabled: true
-      key: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-2.domain.tld/my-apache-site-2.domain.tld.pem.key"
-      crt: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-2.domain.tld/my-apache-site-2.domain.tld.pem.crt"
-    proxy:
-      url: "https://www.google.com:443/"
-      pass: "/"
-
-  - server:
-      name: "my-apache-site-3.domain.tld"
-    ssl:
-      enabled: true
-      key: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-3.domain.tld/my-apache-site-3.domain.tld.pem.key"
-      crt: "{{ inv_add_apache_confs_ssl_files_path }}/my-apache-site-3.domain.tld/my-apache-site-3.domain.tld.pem.crt"
     custom_confs:
         - name: "phpmyadmin.j2"
           alias:
             url: "/"
             path: "/usr/share/phpmyadmin"
           install_path: "/usr/share/phpmyadmin"
+        
 ```
 
 ```YAML
@@ -296,20 +279,20 @@ To run this role, you can copy the molecule/default/converge.yml playbook and ad
   tags:
     - "labocbz.add_apache_confs"
   vars:
-    add_apache_confs_http_listen_port: "{{ inv_add_apache_confs_http_listen_port }}"
-    add_apache_confs_https_listen_port: "{{ inv_add_apache_confs_https_listen_port }}"
-    add_apache_confs_ldap_url: "{{ inv_add_apache_confs_ldap_url }}"
-    add_apache_confs_ldap_port: "{{ inv_add_apache_confs_ldap_port }}"
-    add_apache_confs_ldap_dc: "{{ inv_add_apache_confs_ldap_dc }}"
-    add_apache_confs_auth_ldap_url: "{{ inv_add_apache_confs_auth_ldap_url }}"
-    add_apache_confs_custom_ldap_base_header: "{{ inv_add_apache_confs_custom_ldap_base_header }}"
-    add_apache_confs_webmaster: "{{ inv_add_apache_confs_webmaster }}"
-    add_apache_confs_request_body: "{{ inv_add_apache_confs_request_body }}"
-    add_apache_confs_security_body_limit: "{{ inv_add_apache_confs_security_body_limit }}"
-    add_apache_confs_ssl_files_path: "{{ inv_add_apache_confs_ssl_files_path }}"
-    add_apache_confs_conf_path: "{{ inv_add_apache_confs_conf_path }}"
-    add_apache_confs_base_document_root: "{{ inv_add_apache_confs_base_document_root }}"
-    add_apache_confs_configurations: "{{ inv_add_apache_confs_configurations }}"
+    add_apache_confs__http_listen_port: "{{ inv_add_apache_confs__http_listen_port }}"
+    add_apache_confs__https_listen_port: "{{ inv_add_apache_confs__https_listen_port }}"
+    add_apache_confs__ldap_url: "{{ inv_add_apache_confs__ldap_url }}"
+    add_apache_confs__ldap_port: "{{ inv_add_apache_confs__ldap_port }}"
+    add_apache_confs__ldap_dc: "{{ inv_add_apache_confs__ldap_dc }}"
+    add_apache_confs__auth_ldap_url: "{{ inv_add_apache_confs__auth_ldap_url }}"
+    add_apache_confs__custom_ldap_base_header: "{{ inv_add_apache_confs__custom_ldap_base_header }}"
+    add_apache_confs__webmaster: "{{ inv_add_apache_confs__webmaster }}"
+    add_apache_confs__request_body: "{{ inv_add_apache_confs__request_body }}"
+    add_apache_confs__security_body_limit: "{{ inv_add_apache_confs__security_body_limit }}"
+    add_apache_confs__ssl_files_path: "{{ inv_add_apache_confs__ssl_files_path }}"
+    add_apache_confs__conf_path: "{{ inv_add_apache_confs__conf_path }}"
+    add_apache_confs__base_document_root: "{{ inv_add_apache_confs__base_document_root }}"
+    add_apache_confs__configurations: "{{ inv_add_apache_confs__configurations }}"
   ansible.builtin.include_role:
     name: "labocbz.add_apache_confs"
 ```
@@ -367,6 +350,15 @@ Here you can put your change to keep a trace of your work and decisions.
 
 * Added a conf for /http-check as LB can check the app
 * Added a log exclusion for the check
+
+### 2024-02-22: New CICD and fixes
+
+* Added support for Ubuntu 22
+* Added support for Debian 11/22
+* Edited vars for linting (role name and __)
+* Fix idempotency
+* New CI, need work on tag and releases
+* CI use now Sonarqube
 
 ## Authors
 

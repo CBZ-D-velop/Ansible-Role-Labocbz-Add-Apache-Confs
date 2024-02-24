@@ -4,7 +4,7 @@
 #                            #
 ##############################
 
-<VirtualHost *:{{ add_apache_confs_http_listen_port }}>
+<VirtualHost *:{{ add_apache_confs__http_listen_port }}>
 {% include './templates/server-definition.j2' %}
 
 {% include './templates/log-module.j2' %}

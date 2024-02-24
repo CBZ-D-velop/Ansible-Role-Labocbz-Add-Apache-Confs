@@ -1,8 +1,8 @@
     # Set basic server informations
-    ServerAdmin {{ vhost.webmaster | default(add_apache_confs_webmaster) }}
-    DocumentRoot {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}
+    ServerAdmin {{ vhost.webmaster | default(add_apache_confs__webmaster) }}
+    DocumentRoot {{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}
     ServerSignature Off
-    LimitRequestBody {{ vhost.security.request_body | default(add_apache_confs_request_body) }}
+    LimitRequestBody {{ vhost.security.request_body | default(add_apache_confs__request_body) }}
     {% if not(vhost.server.aliases | default(false)) %}
     # No Aliases, so Host is ServerName
     RequestHeader set Host {{ vhost.server.name }}
