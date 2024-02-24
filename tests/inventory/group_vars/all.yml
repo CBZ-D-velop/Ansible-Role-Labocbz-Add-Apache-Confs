@@ -1,29 +1,33 @@
 ---
-add_apache_confs__http_listen_port: 80
-add_apache_confs__https_listen_port: 443
+inv_prepare_host__system_users:
+  - login: "www-data"
+    group: "www-data"
 
-add_apache_confs__apache_group: "www-data"
-add_apache_confs__apache_user: "www-data"
+inv_add_apache_confs__http_listen_port: 80
+inv_add_apache_confs__https_listen_port: 443
 
-add_apache_confs__webmaster: "your.webmaster@domain.tld"
-add_apache_confs__request_body: 0
-add_apache_confs__security_body_limit: 1024000000
+inv_add_apache_confs__apache_group: "www-data"
+inv_add_apache_confs__apache_user: "www-data"
 
-add_apache_confs__ssl_files_path: "/etc/apache2/ssl"
-add_apache_confs__conf_path: "/etc/apache2/sites-available"
-add_apache_confs__base_document_root: "/var/www/html"
+inv_add_apache_confs__webmaster: "your.webmaster@domain.tld"
+inv_add_apache_confs__request_body: 0
+inv_add_apache_confs__security_body_limit: 1024000000
 
-add_apache_confs__configurations:
+inv_add_apache_confs__ssl_files_path: "/etc/apache2/ssl"
+inv_add_apache_confs__conf_path: "/etc/apache2/sites-available"
+inv_add_apache_confs__base_document_root: "/var/www/html"
+
+inv_add_apache_confs__configurations:
   - server:
       name: "my-apache-site-1.domain.tld"
       aliases:
         - "oneAlias.net"
         - "anotherAlias.com"
-      webmaster: "{{ add_apache_confs__webmaster }}"
+      webmaster: "{{ inv_add_apache_confs__webmaster }}"
     ssl:
       enabled: true
-      key: "{{ add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
-      crt: "{{ add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
+      key: "{{ inv_add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.key"
+      crt: "{{ inv_add_apache_confs__ssl_files_path }}/my-apache-site-1.domain.tld/my-apache-site-1.domain.tld.pem.crt"
     proxy:
       url: "https://my.proxy"
       pass: "/"

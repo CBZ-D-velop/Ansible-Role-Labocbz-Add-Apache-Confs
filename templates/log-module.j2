@@ -2,14 +2,14 @@
     LogFormat "%h %l %u %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-agent}i\"" combined
     SetEnvIf Request_Method OPTIONS blackhole-log
     SetEnvIf Request_URI "^/$" blackhole-log
-    ErrorLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/error.log"
-    CustomLog "{{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/access.log" combined env=!blackhole-log
+    ErrorLog "{{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}/error.log"
+    CustomLog "{{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}/access.log" combined env=!blackhole-log
 
     <IfModule mod_evasive20.c>
-            DOSLogDir {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/mod_evasive.log
+            DOSLogDir {{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}/mod_evasive.log
     </IfModule>
     <IfModule security2_module>
-            SecAuditLog {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/modsec_audit.log
+            SecAuditLog {{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}/modsec_audit.log
             SecAuditEngine Off
             #SecAuditEngine RelevantOnly
             SecAuditLogParts ABCFHZ 
@@ -18,5 +18,5 @@
     </IfModule>
     <IfModule pagespeed_module>
             # Set the PageSpeed file cache directory
-            ModPagespeedFileCachePath {{ add_apache_confs_base_document_root }}/{{ vhost.server.name }}/mod_pagespeed/
+            ModPagespeedFileCachePath {{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}/mod_pagespeed/
     </IfModule>

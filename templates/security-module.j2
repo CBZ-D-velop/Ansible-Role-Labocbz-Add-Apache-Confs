@@ -5,8 +5,8 @@
         SecRuleEngine DetectionOnly
         {% endif %}
 
-        SecRequestBodyLimit {{ vhost.security.request_body | default(add_apache_confs_security_body_limit) }}
-        SecRequestBodyNoFilesLimit {{ vhost.security.request_body | default(add_apache_confs_security_body_limit) }}
+        SecRequestBodyLimit {{ vhost.security.request_body | default(add_apache_confs__security_body_limit) }}
+        SecRequestBodyNoFilesLimit {{ vhost.security.request_body | default(add_apache_confs__security_body_limit) }}
         SecRequestBodyAccess Off
         
         {% if vhost.security.sec_rules_remove_by_id | default(false) %}
