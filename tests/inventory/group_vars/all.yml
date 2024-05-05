@@ -47,6 +47,8 @@ inv_add_apache_confs__configurations:
       url: "ldap://127.0.0.1:10389/dc=example,dc=com?uid"
       attribute: "memberUid"
       attribute_is_dn: "on"
+      group_class: "group"
+      max_depth: 0
       dn: "uid=admin,ou=system"
       password: "secret"
       groups:

@@ -177,6 +177,8 @@ add_apache_confs__configurations:
       url: "{{ add_apache_confs__auth_ldap_url }}"
       attribute: "memberUid"
       attribute_is_dn: "off"
+      group_class: "group"
+      max_depth: 0
       dc: "{{ add_apache_confs__ldap_dc }}"
       groups:
         - admin
@@ -248,6 +250,8 @@ inv_add_apache_confs__configurations:
       url: "ldap://127.0.0.1:10389/dc=example,dc=com?uid"
       attribute: "memberUid"
       attribute_is_dn: "on"
+      group_class: "group"
+      max_depth: 0
       dn: "uid=admin,ou=system"
       password: "secret"
       groups:
@@ -356,6 +360,10 @@ Here you can put your change to keep a trace of your work and decisions.
 * Fix idempotency
 * New CI, need work on tag and releases
 * CI use now Sonarqube
+
+### 2024-05-05: LDAP Basic Auth
+
+* LDAP handling have been fixed
 
 ## Authors
 
