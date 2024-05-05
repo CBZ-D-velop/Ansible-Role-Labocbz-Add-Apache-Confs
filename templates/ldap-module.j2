@@ -21,7 +21,7 @@
         AuthLDAPBindPassword "{{ vhost.ldap.password }}"
 
         AuthLDAPGroupAttribute {{ vhost.ldap.attribute }}
-        uthLDAPSubGroupClass {{ vhost.ldap.group_class }}
+        AuthLDAPSubGroupClass {{ vhost.ldap.group_class }}
         AuthLDAPMaxSubGroupDepth {{ vhost.ldap.max_depth }}
         AuthLDAPGroupAttributeIsDN {{ vhost.ldap.attribute_is_dn | default("on") }}
 
