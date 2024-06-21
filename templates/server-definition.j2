@@ -1,3 +1,4 @@
+
     # Set basic server informations
     ServerAdmin {{ vhost.webmaster | default(add_apache_confs__webmaster) }}
     DocumentRoot {{ add_apache_confs__base_document_root }}/{{ vhost.server.name }}
