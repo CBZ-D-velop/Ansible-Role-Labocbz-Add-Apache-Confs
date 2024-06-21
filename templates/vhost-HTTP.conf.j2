@@ -5,6 +5,7 @@
 ##############################
 
 <VirtualHost *:{{ add_apache_confs__http_listen_port }}>
+
 {% include './templates/server-definition.j2' %}
 
 {% include './templates/log-module.j2' %}
@@ -16,36 +17,17 @@
 {% include './templates/redirect-https-module.j2' %}
 {% else %}
 
-{% if vhost.security | default(false) %}
+{% if vhost.security | default(false) %}{% include './templates/security-module.j2' %}{% endif %}
 
-{% include './templates/security-module.j2' %}
-{% endif %}
+{% if vhost.rewrites | default(false) %}{% include './templates/rewrite-module.j2' %}{% endif %}
 
-{% if vhost.rewrites | default(false) %}
+{% if vhost.redirect | default(false) %}{% include './templates/redirect-module.j2' %}{% endif %}
 
-{% include './templates/rewrite-module.j2' %}
-{% endif %}
+{% if vhost.ldap | default(false) %}{% include './templates/ldap-module.j2' %}{% endif %}
 
-{% if vhost.redirect | default(false) %}
+{% if vhost.proxy | default(false) %}{% include './templates/proxy-module.j2' %}{% endif %}
 
-{% include './templates/redirect-module.j2' %}
-{% endif %}
-
-{% if vhost.ldap | default(false) %}
-
-{% include './templates/ldap-module.j2' %}
-{% endif %}
-
-{% if vhost.proxy | default(false) %}
-
-{% include './templates/proxy-module.j2' %}
-{% endif %}
-
-{% if vhost.custom_confs | default(false) %}
-{% include './templates/custom-conf-module.j2' %}
-{% endif %}
-
-
+{% if vhost.custom_confs | default(false) %}{% include './templates/custom-conf-module.j2' %}{% endif %}
 {% endif %}
 
 </VirtualHost>

@@ -104,7 +104,6 @@ yamllint -c ./.yamllint .
 ansible-lint --config=./.ansible-lint .
 
 # Execute and test your role
-molecule lint
 molecule create
 molecule list
 molecule converge
@@ -372,6 +371,12 @@ Here you can put your change to keep a trace of your work and decisions.
 * Change CICD vars convention
 * New workers
 * Removed all automation based on branch
+
+### 2024-06-21: Clear configuration files and realm
+
+* Clear all configurations with spaces and line skip
+* Clear main configurations files
+* Added the server name inside the authentication realm
 
 ## Authors
 
