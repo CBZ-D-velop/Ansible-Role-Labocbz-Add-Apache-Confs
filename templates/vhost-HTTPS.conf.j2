@@ -7,42 +7,14 @@
 <IfModule mod_ssl.c>
 <VirtualHost *:{{ add_apache_confs__https_listen_port }}>
 {% include './templates/server-definition.j2' %}
-
 {% include './templates/log-module.j2' %}
-
 {% include './templates/basic-module.j2' %}
-
 {% include './templates/ssl-module.j2' %}
-
-{% if vhost.security | default(false) %}
-
-{% include './templates/security-module.j2' %}
-{% endif %}
-
-{% if vhost.rewrites | default(false) %}
-
-{% include './templates/rewrite-module.j2' %}
-{% endif %}
-
-{% if vhost.redirect | default(false) %}
-
-{% include './templates/redirect-module.j2' %}
-{% endif %}
-
-{% if vhost.ldap | default(false) %}
-
-{% include './templates/ldap-module.j2' %}
-{% endif %}
-
-{% if vhost.proxy | default(false) %}
-
-{% include './templates/proxy-module.j2' %}
-{% endif %}
-
-{% if vhost.custom_confs | default(false) %}
-
-{% include './templates/custom-conf-module.j2' %}
-{% endif %}
-
+{% if vhost.security | default(false) %}{% include './templates/security-module.j2' %}{% endif %}
+{% if vhost.rewrites | default(false) %}{% include './templates/rewrite-module.j2' %}{% endif %}
+{% if vhost.redirect | default(false) %}{% include './templates/redirect-module.j2' %}{% endif %}
+{% if vhost.ldap | default(false) %}{% include './templates/ldap-module.j2' %}{% endif %}
+{% if vhost.proxy | default(false) %}{% include './templates/proxy-module.j2' %}{% endif %}
+{% if vhost.custom_confs | default(false) %}{% include './templates/custom-conf-module.j2' %}{% endif %}
 </VirtualHost>
 </IfModule>

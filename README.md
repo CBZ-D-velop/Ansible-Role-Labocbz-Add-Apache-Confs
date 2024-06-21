@@ -372,6 +372,12 @@ Here you can put your change to keep a trace of your work and decisions.
 * New workers
 * Removed all automation based on branch
 
+### 2024-06-21: Clear configuration files and realm
+
+* Clear all configurations with spaces and line skip
+* Clear main configurations files
+* Added the server name inside the authentication realm
+
 ## Authors
 
 * Lord Robin Crombez

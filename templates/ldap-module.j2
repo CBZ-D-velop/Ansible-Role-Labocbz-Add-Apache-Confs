@@ -13,7 +13,7 @@
     <Location />
         # Configure LDAP authentication
         AuthType Basic
-        AuthName "LDAP Authentication"
+        AuthName "LDAP Authentication for {{ vhost.server.name }}"
         AuthBasicProvider ldap
         AuthLDAPURL "{{ vhost.ldap.url }}"
 
